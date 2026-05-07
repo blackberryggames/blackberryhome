@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blackberrys — Unblocked Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0b1a;
+      --surface: #16122a;
+      --card: #1e1836;
+      --border: #2e2850;
+      --berry: #6d28d9;
+      --berry-light: #8b5cf6;
+      --berry-bright: #a78bfa;
+      --cyan: #06b6d4;
+      --gold: #f59e0b;
+      --red: #ef4444;
+      --text: #f0eeff;
+      --muted: #9890c4;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 3px solid var(--berry);
+      padding: 16px 24px 12px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 4px 30px rgba(109,40,217,0.3);
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      margin-bottom: 12px;
+    }
+
+    .logo-berry {
+      font-size: 2.2rem;
+      display: inline-block;
+      animation: wobble 3s ease-in-out infinite;
+    }
+
+    @keyframes wobble {
+      0%,100% { transform: rotate(-6deg) scale(1); }
+      50% { transform: rotate(6deg) scale(1.08); }
+    }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .logo-text .black { color: #c4b5fd; }
+    .logo-text .berrys { color: var(--gold); }
+    .logo-text .dot { color: var(--cyan); }
+
+    .search-wrap {
+      position: relative;
+      max-width: 580px;
+      margin: 0 auto 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      color: var(--text);
+      padding: 12px 20px 12px 48px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--berry-light);
+      box-shadow: 0 0 0 4px rgba(139,92,246,0.2);
+    }
+
+    .search-input::placeholder { color: var(--muted); font-weight: 600; }
+
+    .search-icon {
+      position: absolute;
+      left: 17px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.15rem;
+    }
+
+    .header-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+    }
+
+    .header-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+
+    .header-links a:hover { color: var(--berry-bright); }
+    .header-links .sep { color: var(--border); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+
+    /* Category tags */
+    .categories {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .cat-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .tag {
+      background: var(--card);
+      border: 2px solid var(--border);
+      color: var(--berry-bright);
+      padding: 7px 20px;
+      border-radius: 50px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s cubic-bezier(0.34,1.56,0.64,1);
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
+
+    .tag:hover {
+      background: rgba(109,40,217,0.2);
+      border-color: var(--berry-light);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .tag.active {
+      background: var(--berry);
+      border-color: var(--berry-light);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(109,40,217,0.45);
+    }
+
+    /* Section heading */
+    .section-heading {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--berry) 0%, transparent 100%);
+      border-radius: 2px;
+    }
+
+    /* Game grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 16px;
+    }
+
+    .game-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s, border-color 0.18s;
+      position: relative;
+      animation: cardPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.88) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .game-card:nth-child(2) { animation-delay: 0.04s; }
+    .game-card:nth-child(3) { animation-delay: 0.08s; }
+    .game-card:nth-child(4) { animation-delay: 0.12s; }
+    .game-card:nth-child(5) { animation-delay: 0.16s; }
+    .game-card:nth-child(6) { animation-delay: 0.20s; }
+
+    .game-card:hover {
+      transform: translateY(-7px) scale(1.03);
+      border-color: var(--berry-light);
+      box-shadow: 0 18px 44px rgba(109,40,217,0.32);
+    }
+
+    .game-thumb {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      position: absolute; inset: 0;
+      transition: transform 0.3s;
+    }
+
+    .game-card:hover .game-thumb img { transform: scale(1.07); }
+
+    .emoji-fallback {
+      font-size: 3.6rem;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    }
+
+    .game-card:hover .emoji-fallback { transform: scale(1.2) rotate(-5deg); }
+
+    .badge {
+      position: absolute;
+      top: 8px; left: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      padding: 3px 9px;
+      border-radius: 6px;
+      z-index: 3;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-hot { background: #ef4444; color: #fff; }
+    .badge-new { background: var(--cyan); color: #000; }
+
+    .game-label {
+      padding: 9px 10px 11px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .game-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .game-cat {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+    }
+
+    /* ── MODAL ── */
+    .modal-bg {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(10px);
+      z-index: 900;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-bg.open { display: flex; }
+
+    .modal {
+      width: 96vw; max-width: 1080px;
+      height: 88vh;
+      background: var(--surface);
+      border: 2px solid var(--berry);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 0 80px rgba(109,40,217,0.4);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.86); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-bar {
+      background: var(--card);
+      border-bottom: 2px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .modal-emoji { font-size: 1.5rem; }
+
+    .modal-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .mbtn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      color: var(--muted);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .mbtn:hover { border-color: var(--berry-light); color: var(--text); }
+    .mbtn.x:hover { border-color: var(--red); color: var(--red); }
+
+    .game-iframe { flex: 1; border: none; width: 100%; background: #000; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 2px solid var(--border);
+      padding: 30px 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .footer-logo .black { color: #c4b5fd; }
+    .footer-logo .berrys { color: var(--gold); }
+
+    footer p { color: var(--muted); font-size: 0.85rem; line-height: 1.8; }
+    footer a { color: var(--cyan); text-decoration: none; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--berry); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="/">
+      <span class="logo-berry">🫐</span>
+      <span class="logo-text"><span class="black">Black</span><span class="berrys">berrys</span><span class="dot">.</span></span>
+    </a>
+
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search games..." autocomplete="off" />
+    </div>
+
+    <div class="header-links">
+      <a href="#games">All Games</a>
+      <span class="sep">»</span>
+      <a href="https://github.com" target="_blank">GitHub</a>
+      <span class="sep">»</span>
+      <a href="mailto:blackberryggames@gmail.com">Request a Game</a>
+      <span class="sep">»</span>
+      <a href="mailto:blackberryggames@gmail.com">Report a Bug</a>
+    </div>
+  </header>
+
+  <main id="games">
+    <div class="categories">
+      <div class="cat-label">Free Online Games by Category</div>
+      <div class="tag-row">
+        <button class="tag active" data-filter="all">All Games</button>
+        <button class="tag" data-filter="arcade">Arcade</button>
+        <button class="tag" data-filter="puzzle">Puzzle</button>
+        <button class="tag" data-filter="strategy">Strategy</button>
+        <button class="tag" data-filter="action">Action</button>
+        <button class="tag" data-filter="sports">Sports</button>
+        <button class="tag" data-filter="2player">2 Player</button>
+      </div>
+    </div>
+
+    <div class="section-heading" id="sectionHeading">🎮 All Games</div>
+    <div class="games-grid" id="gamesGrid"></div>
+  </main>
+
+  <footer>
+    <div class="footer-logo"><span class="black">Black</span><span class="berrys">berrys</span></div>
+    <p>New games added every weekend · 100% free · no downloads · no installs</p>
+    <p>Request a game or report a bug → <a href="mailto:blackberryggames@gmail.com">blackberryggames@gmail.com</a></p>
+  </footer>
+
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <div class="modal-bar">
+        <span class="modal-emoji" id="mEmoji">🎮</span>
+        <span class="modal-name" id="mName">Game</span>
+        <a class="mbtn" id="mNewTab" href="#" target="_blank">⬡ New Tab</a>
+        <button class="mbtn x" id="mClose">✕ Close</button>
+      </div>
+      <iframe class="game-iframe" id="gameFrame" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    // ── ADD GAMES HERE ──
+    const games = [
+      {
+        id: 'snake',
+        name: 'Snake',
+        emoji: '🐍',
+        tag: 'arcade',
+        bg: 'linear-gradient(135deg,#052e16,#166534)',
+        hot: true,
+        path: 'games/snake/index.html'
+      },
+      {
+        id: '2048',
+        name: '2048',
+        emoji: '🔢',
+        tag: 'puzzle',
+        bg: 'linear-gradient(135deg,#0c1a3a,#1e3a8a)',
+        path: 'games/2048/index.html'
+      },
+      {
+        id: 'tetris',
+        name: 'Tetris',
+        emoji: '🟦',
+        tag: 'arcade',
+        bg: 'linear-gradient(135deg,#1e1b4b,#4c1d95)',
+        new: true,
+        path: 'games/tetris/index.html'
+      }
+    ];
+
+    let filter = 'all', search = '';
+
+    function render() {
+      const list = games.filter(g =>
+        (filter === 'all' || g.tag === filter) &&
+        g.name.toLowerCase().includes(search)
+      );
+
+      const label = filter === 'all' ? 'All Games' : filter.charAt(0).toUpperCase() + filter.slice(1) + ' Games';
+      document.getElementById('sectionHeading').textContent = `🎮 ${label} (${list.length})`;
+
+      const grid = document.getElementById('gamesGrid');
+      if (!list.length) {
+        grid.innerHTML = '<div class="no-results">😔 No games found!</div>';
+        return;
+      }
+
+      grid.innerHTML = list.map(g => `
+        <div class="game-card" onclick="openGame('${g.id}')">
+          ${g.hot ? '<div class="badge badge-hot">🔥 HOT</div>' : ''}
+          ${g.new ? '<div class="badge badge-new">✦ NEW</div>' : ''}
+          <div class="game-thumb" style="background:${g.bg}">
+            <img src="icons/${g.id}.png" alt="${g.name}"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+            <span class="emoji-fallback" style="display:none">${g.emoji}</span>
+          </div>
+          <div class="game-label">
+            <div class="game-name">${g.name}</div>
+            <div class="game-cat">${g.tag}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    render();
+
+    document.querySelectorAll('.tag').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.tag').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        filter = b.dataset.filter;
+        render();
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      search = e.target.value.toLowerCase();
+      render();
+    });
+
+    function openGame(id) {
+      const g = games.find(x => x.id === id);
+      if (!g) return;
+      document.getElementById('mEmoji').textContent = g.emoji;
+      document.getElementById('mName').textContent = g.name;
+      document.getElementById('gameFrame').src = g.path;
+      document.getElementById('mNewTab').href = g.path;
+      document.getElementById('modalBg').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalBg').classList.remove('open');
+      document.getElementById('gameFrame').src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('mClose').addEventListener('click', closeModal);
+    document.getElementById('modalBg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>2048 — Blackberrys</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Courier New', monospace;
+      color: #e8e8f0;
+      user-select: none;
+    }
+    h2 { font-size: 2rem; font-weight: bold; color: #60a5fa; margin-bottom: 8px; letter-spacing: 0.05em; }
+    .top { display: flex; align-items: center; justify-content: space-between; width: 380px; margin-bottom: 16px; }
+    .scores { display: flex; gap: 12px; }
+    .score-box {
+      background: #1a1a26;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      padding: 8px 16px;
+      text-align: center;
+      min-width: 80px;
+    }
+    .score-label { font-size: 0.6rem; color: #6b6b8a; letter-spacing: 0.1em; text-transform: uppercase; }
+    .score-val { font-size: 1.2rem; color: #e8e8f0; font-weight: bold; }
+    .new-btn {
+      background: #60a5fa;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+    }
+    .new-btn:hover { background: #93c5fd; }
+    .board {
+      background: #1a1a26;
+      border-radius: 12px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      width: 380px;
+      height: 380px;
+    }
+    .cell {
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.5rem;
+      transition: background 0.1s;
+    }
+    .hint { margin-top: 14px; font-size: 0.75rem; color: #6b6b8a; }
+
+    /* Tile colors */
+    .t0    { background: #12121a; color: transparent; }
+    .t2    { background: #1e3a5f; color: #bfdbfe; }
+    .t4    { background: #1e4d8c; color: #93c5fd; }
+    .t8    { background: #2563eb; color: #eff6ff; font-size: 1.4rem; }
+    .t16   { background: #3b82f6; color: #eff6ff; font-size: 1.3rem; }
+    .t32   { background: #06b6d4; color: #fff; font-size: 1.2rem; }
+    .t64   { background: #0891b2; color: #fff; font-size: 1.1rem; }
+    .t128  { background: #7c3aed; color: #fff; font-size: 1rem; }
+    .t256  { background: #6d28d9; color: #fff; font-size: 0.95rem; }
+    .t512  { background: #8b5cf6; color: #fff; font-size: 0.9rem; }
+    .t1024 { background: #a78bfa; color: #fff; font-size: 0.8rem; }
+    .t2048 { background: linear-gradient(135deg, #60a5fa, #7c3aed); color: #fff; font-size: 0.75rem; }
+    .tbig  { background: #4c1d95; color: #ddd6fe; font-size: 0.7rem; }
+
+    .over-msg {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .over-inner {
+      background: #12121a;
+      border: 1px solid #60a5fa;
+      border-radius: 16px;
+      padding: 32px 48px;
+      text-align: center;
+    }
+    .over-inner h3 { color: #60a5fa; font-size: 1.8rem; margin-bottom: 10px; }
+    .over-inner p { color: #6b6b8a; margin-bottom: 20px; }
+    .over-inner button { background: #60a5fa; color: #000; border: none; padding: 12px 32px; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>2048</h2>
+  <div class="top">
+    <div class="scores">
+      <div class="score-box"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+      <div class="score-box"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+    </div>
+    <button class="new-btn" onclick="init()">New Game</button>
+  </div>
+  <div class="board" id="board"></div>
+  <p class="hint">Arrow keys or swipe to move tiles</p>
+
+  <div class="over-msg" id="over">
+    <div class="over-inner">
+      <h3 id="overTitle">Game Over!</h3>
+      <p id="overSub"></p>
+      <button onclick="init(); document.getElementById('over').style.display='none'">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    let grid, score, best = 0;
+
+    function init() {
+      grid = Array.from({length:4}, () => Array(4).fill(0));
+      score = 0;
+      addTile(); addTile();
+      render();
+    }
+
+    function addTile() {
+      const empty = [];
+      for (let r=0;r<4;r++) for (let c=0;c<4;c++) if (!grid[r][c]) empty.push([r,c]);
+      if (!empty.length) return;
+      const [r,c] = empty[Math.floor(Math.random()*empty.length)];
+      grid[r][c] = Math.random() < 0.9 ? 2 : 4;
+    }
+
+    function tileClass(v) {
+      if (!v) return 't0';
+      if (v <= 2048) return 't'+v;
+      return 'tbig';
+    }
+
+    function render() {
+      const b = document.getElementById('board');
+      b.innerHTML = '';
+      for (let r=0;r<4;r++) for (let c=0;c<4;c++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell ' + tileClass(grid[r][c]);
+        cell.textContent = grid[r][c] || '';
+        b.appendChild(cell);
+      }
+      document.getElementById('score').textContent = score;
+      if (score > best) { best = score; document.getElementById('best').textContent = best; }
+    }
+
+    function compress(row) {
+      const f = row.filter(x=>x);
+      let pts = 0;
+      for (let i=0;i<f.length-1;i++) {
+        if (f[i]===f[i+1]) { f[i]*=2; pts+=f[i]; f.splice(i+1,1); i--; }
+      }
+      while (f.length<4) f.push(0);
+      return {row: f, pts};
+    }
+
+    function move(dir) {
+      let moved = false, total = 0;
+      const orig = JSON.stringify(grid);
+
+      for (let i=0;i<4;i++) {
+        let row;
+        if (dir==='left') row = grid[i];
+        else if (dir==='right') row = [...grid[i]].reverse();
+        else if (dir==='up') row = grid.map(r=>r[i]);
+        else row = grid.map(r=>r[i]).reverse();
+
+        const {row: nr, pts} = compress(row);
+        total += pts;
+
+        if (dir==='left') grid[i] = nr;
+        else if (dir==='right') grid[i] = nr.reverse();
+        else if (dir==='up') nr.forEach((v,j)=>grid[j][i]=v);
+        else nr.reverse().forEach((v,j)=>grid[j][i]=v);
+      }
+
+      if (JSON.stringify(grid) !== orig) { score += total; addTile(); render(); checkEnd(); }
+    }
+
+    function checkEnd() {
+      for (let r=0;r<4;r++) for (let c=0;c<4;c++) {
+        if (!grid[r][c]) return;
+        if (c<3 && grid[r][c]===grid[r][c+1]) return;
+        if (r<3 && grid[r][c]===grid[r+1][c]) return;
+      }
+      document.getElementById('overTitle').textContent = 'Game Over!';
+      document.getElementById('overSub').textContent = 'Final score: ' + score;
+      document.getElementById('over').style.display = 'flex';
+    }
+
+    document.addEventListener('keydown', e => {
+      const map = {ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};
+      if (map[e.key]) { e.preventDefault(); move(map[e.key]); }
+    });
+
+    // Touch
+    let tx, ty;
+    document.addEventListener('touchstart', e => { tx=e.touches[0].clientX; ty=e.touches[0].clientY; });
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx;
+      const dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dx)>Math.abs(dy)) move(dx>0?'right':'left');
+      else move(dy>0?'down':'up');
+    });
+
+    init();
+  </script>
+</body>
+</html>
